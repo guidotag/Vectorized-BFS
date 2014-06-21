@@ -4,5 +4,6 @@ pr_src=0.01
 output_file=bfs.out
 
 make clean
-make
+make bfs
+echo "Running..."
 ./bin/bfs -f $output_file $num_nodes $pr_adj $pr_src

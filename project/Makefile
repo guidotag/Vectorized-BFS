@@ -25,7 +25,7 @@ OBJS_TEST_W_DIR=$(addprefix $(SRC_TEST_DIR), $(OBJS_TEST))
 BIN_W_DIR=$(BIN_DIR)$(BIN)
 BIN_TEST_W_DIR=$(BIN_DIR)$(BIN_TEST)
 
-.PHONY: all clean run bfs tests
+.PHONY: all clean bfs tests
 
 all: bfs tests
 
@@ -40,9 +40,6 @@ tests: $(OBJS_W_DIR) $(OBJ_MAIN_TEST_W_DIR) $(OBJS_TEST_W_DIR)
 	
 %.o: %.asm
 	$(ASM) $(ASMFLAGS) $< -o $@
-	
-run: bfs
-	./bin/bfs
 	
 clean:
 	rm -f $(OBJ_MAIN_W_DIR)
