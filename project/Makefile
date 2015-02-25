@@ -2,37 +2,37 @@ CC = gcc
 ASM = nasm
 
 CFLAGS = -O2 -Wall -std=c99 -pedantic #-Werror
-ASMFLAGS = -felf64 -g -F dwarf
+ASMFLAGS = -f elf64 #macho64
 
-BIN_DIR = bin/
-SRC_DIR = src/
-SRC_TEST_DIR = tests/src/
+BIN_DIR = ./bin
+SRC_DIR = ./src
+SRC_TEST_DIR = ./tests/src
 
 BIN = bfs
 MAIN = main.o
-OBJS = bmatrix.o list.o vectorized_bfs.o bfs.o queue.o utils.o
+OBJS = bmatrix.o list.o bfs.o queue.o utils.o vectorized_bfs.o
 
 BIN_TEST = tests
 MAIN_TEST = main.o
 OBJS_TEST = test_bmatrix.o test_list.o test_queue.o test_utils.o test_bfs.o
 
-BIN_W_DIR = $(BIN_DIR)$(BIN)
-MAIN_W_DIR = $(SRC_DIR)$(MAIN)
-OBJS_W_DIR = $(addprefix $(SRC_DIR), $(OBJS))
+BIN_PATH = $(BIN_DIR)/$(BIN)
+MAIN_PATH = $(SRC_DIR)/$(MAIN)
+OBJS_PATH = $(addprefix $(SRC_DIR)/, $(OBJS))
 
-BIN_TEST_W_DIR = $(BIN_DIR)$(BIN_TEST)
-MAIN_TEST_W_DIR = $(SRC_TEST_DIR)$(MAIN_TEST)
-OBJS_TEST_W_DIR = $(addprefix $(SRC_TEST_DIR), $(OBJS_TEST))
+BIN_TEST_PATH = $(BIN_DIR)/$(BIN_TEST)
+MAIN_TEST_PATH = $(SRC_TEST_DIR)/$(MAIN_TEST)
+OBJS_TEST_PATH = $(addprefix $(SRC_TEST_DIR)/, $(OBJS_TEST))
 
 .PHONY: all clean bfs tests
 
 all: bfs tests
 
-bfs: $(MAIN_W_DIR) $(OBJS_W_DIR)
-	$(CC) $^ -o $(BIN_W_DIR)
+bfs: $(MAIN_PATH) $(OBJS_PATH)
+	$(CC) $^ -o $(BIN_PATH)
 	
-tests: $(OBJS_W_DIR) $(MAIN_TEST_W_DIR) $(OBJS_TEST_W_DIR)
-	$(CC) $^ -o $(BIN_TEST_W_DIR)
+tests: $(OBJS_PATH) $(MAIN_TEST_PATH) $(OBJS_TEST_PATH)
+	$(CC) $^ -o $(BIN_TEST_PATH)
 	
 %.o: %.c
 	$(CC) $(CFLAGS) -c $< -o $@
@@ -41,10 +41,10 @@ tests: $(OBJS_W_DIR) $(MAIN_TEST_W_DIR) $(OBJS_TEST_W_DIR)
 	$(ASM) $(ASMFLAGS) $< -o $@
 	
 clean:
-	rm -f $(MAIN_W_DIR)
-	rm -f $(OBJS_W_DIR)
-	rm -f $(BIN_W_DIR)
-	rm -f $(OBJS_TEST_W_DIR)
-	rm -f $(MAIN_TEST_W_DIR)
-	rm -f $(BIN_TEST_W_DIR)
+	rm -f $(MAIN_PATH)
+	rm -f $(OBJS_PATH)
+	rm -f $(BIN_PATH)
+	rm -f $(OBJS_TEST_PATH)
+	rm -f $(MAIN_TEST_PATH)
+	rm -f $(BIN_TEST_PATH)
 	

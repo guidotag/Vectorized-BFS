@@ -85,23 +85,23 @@ void doit(int n, double pr_adj, double pr_src){
 }
 
 void print_help(){
-	printf("Usage of the program:\n");
+	printf("Usage:\n");
 	printf("\t%s <options> [parameters]\n", program_name);
 	printf("The available options are:\n");
-	printf("\t> -h, -help\n\tPrints help information\n");
-	printf("\t> -f, -file <file_name>\n\tOutput to a specific file\n");
+	printf("\t-h, -help\n\t\tPrints help information\n");
+	printf("\t-f, -file <file_name>\n\t\tOutput to a specific file\n");
 	printf("There are three parameters:\n");
-	printf("\t> n\n\tThe number of nodes of the graph\n");
-	printf("\t> pr_adj\n\tThe graph density parameter\n");
-	printf("\t> pr_src\n\tThe sources density parameter\n");
+	printf("\tn\n\t\tThe number of nodes of the graph\n");
+	printf("\tpr_adj\n\t\tThe graph density parameter\n");
+	printf("\tpr_src\n\t\tThe sources density parameter\n");
 	printf("Output's format:\n");
-	printf("\tn pr_adj pr_src t1 t2 t3\n");
+	printf("\tn pr_adj pr_src tsc1 tsc2 tsc3\n");
 	printf("where\n");
-	printf("\tt1 = bfs tsc\n");
-	printf("\tt2 = vectorized_bfs_branching tsc\n");
-	printf("\tt3 = vectorized_bfs_no_branching tsc\n");
+	printf("\ttsc1 = bfs TSC\n");
+	printf("\ttsc2 = vectorized_bfs_branching TSC\n");
+	printf("\ttsc3 = vectorized_bfs_no_branching TSC\n");
 	printf("Example call:\n");
-	printf("\t%s -f output.out 100 0.75 0.1\n", program_name);
+	printf("\t%s -f output.txt 100 0.75 0.1\n", program_name);
 }
 
 int main(int argc, char *argv[]){
@@ -110,6 +110,8 @@ int main(int argc, char *argv[]){
 	double pr_src;
 	bool redirect_output = FALSE;
 	char output_file[10 + OUTPUT_FILE_NAME_MAX_LEN];
+
+	memset(output_file, 0, 10 + OUTPUT_FILE_NAME_MAX_LEN);
 	
 	program_name = argv[0];
 	
@@ -155,9 +157,9 @@ int main(int argc, char *argv[]){
 	pr_adj = atof(argv[argc - 2]);
 	pr_src = atof(argv[argc - 1]);
 	
+	FILE *file = NULL;
 	if(redirect_output){
-		fopen(output_file, "a");
-		freopen(output_file, "a", stdout);
+		file = freopen(output_file, "a", stdout);
 	}
 	
 	printf("%i %f %f ", n, pr_adj, pr_src);
@@ -165,6 +167,10 @@ int main(int argc, char *argv[]){
 	doit(n, pr_adj, pr_src);
 	
 	printf("\n");
+
+	if(redirect_output){
+		fclose(file);
+	}
 	
 	return 0;
 }
