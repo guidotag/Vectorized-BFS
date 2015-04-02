@@ -1,0 +1,302 @@
+\section{Background}
+
+\subsection{Teoría de grafos}
+Haremos un repaso breve de algunos conceptos elementales de teoría de grafos.
+
+\begin{defi}
+Un grafo dirigido (o digrafo) $G$ es una tupla $(V, E)$ donde $V$ es un conjunto finito y no vacío de elementos llamados nodos, y $E \subset \{(v, w) \in V \times V : v \neq w\}$ es un subconjunto de pares ordenados de vértices, llamados aristas.
+\end{defi}
+
+Por ejemplo, en el digrafo de la Figura \ref{fig:grafo3} se tiene $V = \{v_1, v_2, v_3, v_4\}$ y\\$E = \{(v_1, v_2), (v_1, v_3), (v_2, v_1), (v_3, v_2), (v_3, v_4)\}$.
+
+\begin{defi}
+Dados dos nodos $v, w \in V$, decimos que $v$ incide en $w$ si $(v, w) \in E$.
+\end{defi}
+
+Por claridad, a un par ordenado $(v, w)$ también lo notamos $v \to w$.
+
+\begin{defi}
+Dados $v, w \in V$, decimos que $v$ y $w$ son adyacentes si $v \to w \in E$ ó $w \to v \in E$.
+\end{defi}
+
+\begin{defi}
+Un camino dirigido en $G$ es una secuencia de nodos $\langle v_1, \cdots, v_n \rangle$ tal que $v_1 \to v_2 \in E, \cdots, v_{n - 1} \to v_n \in E$.
+\end{defi}
+
+En el digrafo de la Figura \ref{fig:grafo3}, $\langle v_1, v_2, v_1 \rangle$ y $\langle v_3, v_2, v_1, v_3 \rangle$ son dos caminos dirigidos.
+
+\begin{defi}
+Dados $v, w \in V$, decimos que $w$ es alcanzable desde $v$ si existe un camino dirigido que comienza en $v$ y termina en $w$.
+\end{defi}
+
+En el digrafo de la Figura \ref{fig:grafo3}, $v_4$ es alcanzable desde $v_2$ y $v_1$ es alcanzable desde $v_3$. Por el contrario, $v_2$ no es alcanzable desde $v_4$.
+
+\begin{defi}
+Dados $v, w \in V$ tales que existe un camino de $v$ a $w$, se define la distancia $d(v, w)$ de $v$ a $w$ como la cantidad de aristas del camino más corto de $v$ a $w$.
+\end{defi}
+
+Por ejemplo, en el digrafo de la Figura \ref{fig:grafo3}, $d(v_3, v_2) = 1$ y $d(v_2, v_3) = 2$. En particular, esto muestra que la distancia en grafos dirigidos no es reflexiva, i. e., $d(v, w)$ no necesariamente es igual a $d(w, v)$.
+
+\begin{defi}
+Dado $w \in V$ y un subconjunto no vacío $S \subset V$, definimos la distancia $d(S, w)$ de $S$ a $w$ como
+
+\[d(S, w) = \min\limits_{v \in S}d(v, w)\]
+\end{defi}
+
+En el digrafo de la Figura \ref{fig:grafo3}, $d(\{v_1, v_2\}, v_3) = \min\{d(v_1, v_3), d(v_2, v_3)\} = 1$.\\[0.5cm]
+
+En este trabajo, todos los grafos de los que hablemos serán dirigidos, por lo que omitiremos la aclaración sobre la dirección.
+
+\begin{figure}
+\begin{center}
+\begin{tikzpicture}[->,>=stealth', auto, node distance=2cm, font=\sffamily\bfseries]
+  
+  \tikzstyle{nonroot}=[draw, circle, fill = black, text = black, minimum width = 6.5pt, inner sep=0pt]
+
+  \node [nonroot] (1) [label=left:$v_1$] {};
+  \node [nonroot] (2) [right of = 1, label=right:$v_2$] {};
+  \node [nonroot] (3) [below of = 1, label=left:$v_3$] {};
+  \node [nonroot] (4) [right of = 3, label=right:$v_4$] {};
+
+  \path[every node/.style={font=\sffamily\small}]
+    (1) edge [bend right] node [right] {} (2)
+    (1) edge [bend right] node [below] {} (3)
+    (2) edge [bend right] node [left] {} (1)
+    (3) edge [bend right] node [above right] {} (2)
+    (3) edge [bend right] node [below] {} (4);
+\end{tikzpicture}
+\end{center}
+\caption{Grafo dirigido}
+\label{fig:grafo3}
+\end{figure}
+
+\subsection{Representación de un grafo}
+Para representar un grafo en una computadora se utilizan, tradicionalmente, dos estructuras: listas de adyacencia y matriz de adyacencia.
+
+\subsubsection{Listas de adyacencia}
+Dado un grafo $G = (V, E)$, con $V = \{v_1, \cdots, v_n\}$, una representación de $G$ en forma de listas de adyacencia es un arreglo $Adj[1 \twodots  n]$, tal que $Adj[i]$ es una lista que contiene exactamente (y sin repeticiones) los nodos en los que incide $v_i$.
+
+A modo de ejemplo, consideremos el grafo de la Figura \ref{fig:grafo3}. Aquí $Adj$ es un arreglo de 4 elementos, y vale 
+	
+\begin{eqnarray*}
+Adj[1] &=& 2 \to 3 \to \textsc{Nil}\\
+Adj[2] &=& 1 \to \textsc{Nil}\\
+Adj[3] &=& 2 \to 4 \to \textsc{Nil}\\
+Adj[4] &=& \textsc{Nil}
+\end{eqnarray*}
+
+Observar que hemos enumerado los nodos en la forma $v_1, \cdots, v_n$ y, posteriormente, para referirnos al nodo $v_i$ utilizamos el número entero $i$ que es su posición en dicho orden. Esta forma de asociar nodos a números enteros será utilizada frecuentemente, sobre todo en los algoritmos.
+
+\subsubsection{Matriz de adyacencia}
+Nuevamente sea $G = (V, E)$ un grafo con $V = \{v_1, \cdots, v_n\}$. Se define la matriz de adyacencia de $G$ como la matriz $A \in \{0, 1\}^{n \times n}$ tal que
+
+\[A_{ij} = \left\{ 
+  \begin{array}{l l}
+    1 & \quad \text{si } v_i \to v_j \in E\\
+    0 & \quad \text{si no}
+  \end{array} \right.
+\]
+
+La representación de $G$ en forma de matriz de adyacencia es, obviamente, su matriz de adyacencia. Para el grafo de la Figura \ref{fig:grafo3} esta representación es
+
+\[A = \begin{pmatrix}
+0 & 1 & 1 & 0\\
+1 & 0 & 0 & 0\\
+0 & 1 & 0 & 1\\
+0 & 0 & 0 & 0
+\end{pmatrix}\]
+
+\subsection{Recorridos sobre un grafo}
+Dado un grafo $G$, podemos seleccionar uno de sus nodos, al que llamamos \textit{nodo fuente}, y empezar a recorrerlo moviéndonos sucesivamente entre nodos adyacentes. Es evidente que hay infinitas formas distintas de recorrerlo, las cuales podemos obtener variando el orden en que visitamos los nodos o repitiendo visitas a algunos de ellos. Resulta natural pensar que, entre todas estas formas de recorrido, son preferibles aquellas que no repiten nodos, pues no realizan movimientos innecesarios. Por otro lado, también parece deseable que el recorrido visite al menos una vez cada uno de los nodos alcanzables desde el nodo fuente, porque de lo contrario sería incompleto.
+
+Todo esto motiva la siguiente definición.
+
+\begin{defi}
+Decimos que un recorrido sobre un grafo es deseable si
+\begin{enumerate}
+	\item No repite nodos.
+	\item Visita todos los nodos alcanzables desde el nodo fuente.
+\end{enumerate}
+\end{defi}
+
+Podemos generalizar esta noción permitiendo que un recorrido tenga la capacidad de comenzar ya no desde un único nodo de partida, sino desde un \emph{conjunto} de nodos. Recorrer el grafo no es más difícil si los nodos de partida son múltiples, pues es posible transformar el grafo que queremos recorrer agregándole un nuevo nodo que incida en todos los nodos de partida, de modo tal que el problema inicial queda reducido al de recorrer este nuevo grafo con este nuevo nodo como única fuente.
+
+%¿Por qué queremos recorrer un grafo? Vimos, en la introducción, que el problema que debíamos resolver era el de determinar cuáles nodos \emph{no} eran alcanzables desde un conjunto de nodos fuente. Observemos que si conocemos los nodos alcanzables desde los fuentes, entonces es inmediato conocer los que no lo son. Por lo tanto, si recorremos el grafo a partir de los nodos fuente, marcando cada nodo que es visitado, y además el recorrido utilizado es deseable, entonces al finalizar dicho recorrido los nodos marcados serán exactamente los nodos alcanzables desde el conjunto de nodos fuente. 
+
+\subsubsection{Esquema general}
+\label{subsubsec:esquema}
+Consideremos un algoritmo que mantiene, en todo momento, un conjunto $M$ de nodos ya visitados o \textit{marcados}, y un conjunto $F = \{v \in V - M : \text{existe }w\in M\text{ tal que }w \to v \in E\}$, es decir, el conjunto de nodos adyacentes a nodos en $M$, que están fuera de $M$. Los nodos de $F$ se llaman \textit{nodos fronterizos}. En cada paso, el algoritmo elige un nodo de $F$, lo agrega a los nodos visitados, y actualiza el conjunto de nodos fronterizos. Repite esta operación hasta que no haya nodos fronterizos.
+
+\begin{algorithm}
+	\dontprintsemicolon
+	\SetKwInOut{Input}{input}
+	\SetKwInOut{Output}{output}
+	\Input{$G$ grafo\\$S$ conjunto de nodos fuente}
+ 	\Output{$M$ conjunto de nodos visitados}
+ 	\BlankLine
+	\Begin{
+		$M = \emptyset$\;
+		$F = S$\;	
+		\While{$F \neq \emptyset$}{
+			Elegir un nodo $v\in F$\;	
+			Agregar $v$ al conjunto $M$\;
+			Actualizar el conjunto de nodos fronterizos $F$\;
+		}
+		\Return $M$\;
+ 	}
+\caption{Recorrido sobre un grafo}
+\label{algo:algoritmo1}
+\end{algorithm}
+
+El Algoritmo \ref{algo:algoritmo1} recorrerá exactamente todos los nodos alcanzables desde el conjunto input $M$ (la demostración de ello es sencilla y se puede ver en \cite{gross06}). Además no repite nodos, porque cada vez que visita un nodo lo agrega al conjunto $M$, que es disjunto con $F$. Por lo tanto, este algoritmo realiza un recorrido deseable sobre un grafo.
+
+Notemos que el algoritmo no especifica la forma en que se realiza la elección de $v \in F$ en la linea 4. Por esta razón decimos que representa a una familia de algoritmos que ejecutan recorridos deseables sobre un grafo, donde cada miembro de esta familia se distingue por la forma de realizar la elección del nodo fronterizo.
+
+Dos de los algoritmos que se derivan del Algoritmo \ref{algo:algoritmo1} son DFS y BFS. A continuación presentamos una breve exposición de los mismos. Si bien daremos una definición precisa de ellos, el lector no familiarizado debería referirse a un tratamiento más detallado (por ejemplo en \cite{cormen01}).
+
+\subsubsection{DFS}
+Depth First Search (en castellano, búsqueda en profundidad) es un algoritmo de recorrido que sigue el esquema del Algoritmo \ref{algo:algoritmo1}. Específicamente elige, entre los nodos fronterizos $F$, el último de los nodos agregados al conjunto. Esto hace que los nodos se recorran en profundidad, es decir, intentando alejarse, en cada paso, de los nodos fuente.
+
+Una implementación tradicional de DFS utiliza, para representar el conjunto $F$, una pila. Una pila resulta adecuada ya que el nodo de $F$ elegido en cada paso es el último agregado al conjunto, lo cual coincide con el invariante LIFO (Last In First Out).
+
+En el Algoritmo \ref{algo:algoritmo2} presentamos esta versión de DFS con una pila. Al grafo $G$ lo representamos mediante listas de adyacencia. Si $V = \{v_1, \cdots, v_n\}$ es el conjunto de nodos de $G$, entonces al conjunto $S$ de nodos fuente lo representamos como un arreglo de $n$ elementos, tal que 
+
+\[S[i] = \left\{ 
+  \begin{array}{l l}
+    1 & \quad \text{si } v_i \in S\\
+    0 & \quad \text{si no}
+  \end{array} \right.
+\]
+
+El conjunto $M$ de nodos marcados se representa igual que $S$.
+
+\begin{algorithm}
+	\dontprintsemicolon
+	\SetKwInOut{Input}{input}
+	\SetKwInOut{Output}{output}
+	\Input{$G = (V, E)$ grafo\\$S$ conjunto de nodos fuente}
+ 	\Output{$M$ conjunto de nodos visitados}
+ 	\BlankLine
+	\Begin{
+		$n = |V|$\;
+		Sea $F$ una pila\;
+		$F = \emptyset$\;
+		Sea $M$ un arreglo de $n$ elementos\;
+		Inicializar cada posición de $M$ en 0\;
+		
+		\For{$i = 1$ \KwTo $n$}{
+			\If{$S[i] = 1$}{
+				$M[i] = 1$\;
+				$\textsc{Push}(F, i)$\;
+			}
+		}
+		\While{$F \neq \emptyset$}{
+			$i = \textsc{Pop}(F)$\;	
+			\ForEach{$j \in Adj[i]$}{
+				\If{$M[j] = 0$}{
+					$M[j] = 1$\;
+					$\textsc{Push}(F, j)$\;
+				}
+			}
+		}
+		\Return $M$\;
+ 	}
+\caption{$\textsc{Iterative-DFS}$}
+\label{algo:algoritmo2}
+\end{algorithm}
+
+La función $\textsc{Push}$ agrega un elemento a la pila, y la función $\textsc{Pop}$ extrae el próximo elemento de la misma. Éstas son las funciones básicas en la interfaz de una pila.
+
+En nuestra implementación, $M$ y $F$ no representan conjuntos disjuntos, dado que cada vez que agregamos un nodo a $F$, lo marcamos en $M$ para no volver a insertarlo en la pila. Si bien esto es inconsistente con el invariante original sobre $F$ y $M$ indicado en \ref{subsubsec:esquema}, es fácilmente salvable utilizando un arreglo auxiliar para evitar insertar duplicados en $F$, y modificar $M$ únicamente al extraer los nodos de la pila. Hemos preferido sacrificar un poco de claridad en el algoritmo para ganar en términos temporales y espaciales al evitarnos este arreglo auxiliar.
+
+Calculemos la complejidad del Algoritmo \ref{algo:algoritmo2}. Sea $m$ la cantidad de aristas del grafo $G$. La inicialización de las variables es $\mathcal{O}(n)$. El ciclo de las lineas 7-12 es $\mathcal{O}(n)$. Falta calcular la complejidad del ciclo 13-22. Dado que sólo agregamos a la pila nodos no marcados, y que al agregar un nodo éste es marcado, entonces a lo sumo agregamos una vez cada nodo a la pila. Esto implica que la linea 14 y la linea 18 se ejecutan $\mathcal{O}(n)$ veces. Más aún, las lineas 15 y 16 se ejecutan $\mathcal{O}(m)$ veces, porque cada ejecución de la linea 15 se realiza para un eje $i \to j \in E$ distinto. Entonces, el ciclo 13-21 cuesta $\mathcal{O}(n + m)$. En definitiva, la complejidad de DFS es $\mathcal{O}(n + m)$. 
+
+Observemos que la representación del grafo mediante listas de adyacencias tiene una fuerte influencia en la complejidad calculada, ya que gracias a esto el ciclo 15-20 se ejecuta $\mathcal{O}(m)$ veces. Si en lugar de esto utilizáramos una matriz de adyacencia, dicho ciclo se ejecutaría $\mathcal{O}(n^2)$ veces, ya que para cada uno de los $\mathcal{O}(n)$ nodos extraídos de la pila, habría que recorrer toda una fila de la matriz de adyacencia, buscando los nodos adyacentes. Por lo tanto, DFS representando al grafo con una matriz de adyacencia tiene costo $\mathcal{O}(n^2)$. 
+
+Una implementación alternativa de DFS, quizá más natural, es la recursiva, que simula el comportamiento de la pila mediante recursión. La idea del algoritmo es que si queremos recorrer un grafo en profundidad entonces al visitar un nodo debemos hacer DFS recursivamente sobre sus nodos adyacentes. En el Algoritmo \ref{algo:algoritmo3} podemos ver esta implementación alternativa. La representación de $G$, $S$ y $M$ que utiliza es la misma que antes.
+
+\begin{algorithm}
+	\dontprintsemicolon
+	\SetKwInOut{Input}{input}
+	\SetKwInOut{Output}{output}
+	\Input{$G = (V, E)$ grafo\\$S$ conjunto de nodos fuente}
+ 	\Output{$M$ conjunto de nodos visitados}
+ 	\BlankLine
+	\Begin{
+		$n = |V|$\;
+		Sea $M$ un arreglo de $n$ elementos\;
+		Inicializar cada posición de $M$ en 0\;
+		\For{$i = 1$ \KwTo $n$}{
+			\If{$S[i] = 1$}{
+				$M[i] = 1$\;
+				$\textsc{DFS-Visit}(G, M, i)$\;
+			}
+		}		
+		\Return $M$\;
+ 	}
+\caption{$\textsc{Recursive-DFS}$}
+\label{algo:algoritmo3}
+\end{algorithm}
+
+\begin{algorithm}
+	\dontprintsemicolon
+	\SetKwInOut{Input}{input}
+	\SetKwInOut{Output}{output}
+	\Input{$G$ grafo\\$M$ conjunto de nodos visitados\\$i$ un nodo de $G$}
+	\Output{-}
+ 	\BlankLine
+	\Begin{
+		\ForEach{$j \in Adj[i]$}{
+			\If{$M[j] = 0$}{
+				$M[j] = 1$\;	
+				$\textsc{DFS-Visit}(G, M, j)$\;
+			}
+		}
+ 	}
+\caption{$\textsc{DFS-Visit}$}
+\label{algo:algoritmo4}
+\end{algorithm}
+
+Vale la pena aclarar que el arreglo $M$ debe pasarse por referencia a la función $\textsc{DFS-Visit}$ de modo tal que todas las visitas modifiquen un único arreglo $M$.
+
+\subsubsection{BFS}
+Breadth First Search (en castellano, búsqueda en anchura) es otro algoritmo de recorrido que sigue el esquema del Algoritmo 1. Específicamente elige, entre los nodos fronterizos $F$, el primero de los nodos agregados al conjunto. Esto hace que los nodos se recorran en un orden incremental, según la distancia a los nodos fuente.
+
+Una implementación tradicional de BFS utiliza, para representar el conjunto $F$, una cola. Esta estructura resulta adecuada ya que el nodo de $F$ elegido en cada paso es el último agregado al conjunto, lo cual coincide con el invariante FIFO (First In First Out).
+
+En el Algoritmo \ref{algo:algoritmo5} presentamos una implementación de BFS. La única diferencia respecto del DFS iterativo es que hemos cambiado la pila para representar $F$ por una cola. Se puede probar, en forma análoga a lo hecho para DFS, que la complejidad de BFS, representando al grafo con listas de adyacencia, es $\mathcal{O}(n + m)$, con $m$ la cantidad de aristas del grafo. Utilizando una matriz de adyacencia, la complejidad es $\mathcal{O}(n^2)$.
+
+\begin{algorithm}
+	\dontprintsemicolon
+	\SetKwInOut{Input}{input}
+	\SetKwInOut{Output}{output}
+	\Input{$G = (V, E)$ grafo\\$S$ conjunto de nodos fuente}
+ 	\Output{$M$ conjunto de nodos visitados}
+ 	\BlankLine
+	\Begin{
+		$n = |V|$\;
+		Sea $F$ una cola\;
+		$F = \emptyset$\;
+		Sea $M$ un arreglo de $n$ elementos\;
+		Inicializar cada posición de $M$ en 0\;
+		
+		\For{$i = 1$ \KwTo $n$}{
+			\If{$S[i] = 1$}{
+				$M[i] = 1$\;
+				$\textsc{Push}(F, i)$\;
+			}
+		}
+		\While{$F \neq \emptyset$}{
+			$i = \textsc{Pop}(F)$\;	
+			\ForEach{$j \in Adj[i]$}{
+				\If{$M[j] = 0$}{
+					$M[j] = 1$\;
+					$\textsc{Push}(F, j)$\;
+				}
+			}
+		}
+		\Return $M$\;
+ 	}
+\caption{$\textsc{BFS}$}
+\label{algo:algoritmo5}
+\end{algorithm}

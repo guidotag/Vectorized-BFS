@@ -1,0 +1,3 @@
+\section{Abstract}
+
+En este trabajo presentamos una vectorización del algoritmo tradicional de búsqueda sobre grafos BFS, utilizando en el modelo de cómputo SIMD (Single Instruction, Multiple Data). La complejidad del algoritmo implementado es $\mathcal{O}(n^2)$ donde $n$ es la cantidad de nodos del grafo. Si bien la performance a nivel práctico es inferior a una implementación de BFS en serie con complejidad lineal en el tamaño del grafo, la vectorización que presentamos es novedosa en el sentido de que alcanza a operar sobre 128 nodos del grafo en simultáneo, y deja abierta la posibilidad de utilizar varios nucleos de procesamiento para acelerar el cómputo.
