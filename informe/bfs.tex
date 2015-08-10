@@ -5,7 +5,7 @@ La paralelización de este algoritmo se basa fuertemente en el orden por niveles
 El esquema básico de las vectorizaciones que propondremos es el indicado en el Algoritmo \ref{algo:algoritmo15}.
 
 \begin{algorithm}
-	\dontprintsemicolon
+	\DontPrintSemicolon
 	\SetKwInOut{Input}{input}
 	\SetKwInOut{Output}{output}
 	\Input{$G = (V, E)$ grafo\\$S$ conjunto de nodos fuente}
@@ -202,7 +202,7 @@ Se sigue de la Proposicion \ref{prop:prop1}, que dice que los nodos del nivel $i
 Esta proposición nos da una forma de computar los nodos de cada nivel, dando lugar al Algoritmo \ref{algo:algoritmo16}. 
 
 \begin{algorithm}
-	\dontprintsemicolon
+	\DontPrintSemicolon
 	\SetKwInOut{Input}{input}
 	\SetKwInOut{Output}{output}
 	\Input{$G = (V, E)$ grafo\\$S$ conjunto de nodos fuente}
@@ -259,7 +259,7 @@ Por lo tanto, para agregar a $M$ los nodos del nivel $i$ basta agregar los nodos
 Pero podemos ir todavía más allá y admitir que $M$ tenga, además de todos los nodos de los niveles $0, \cdots, i$, algunos nodos de niveles superiores a $i$. Esto queda plasmado en el Algoritmo \ref{algo:algoritmo17} que, a lo largo del ciclo 8-12, modifica el arreglo $M$ al mismo tiempo que lo utiliza para calcular nuevos valores, pues el arreglo $I$ se construye a partir de elementos de $M$ que posiblemente hayan sido modificados en la ejecución actual del ciclo 7-13.
 
 \begin{algorithm}
-	\dontprintsemicolon
+	\DontPrintSemicolon
 	\SetKwInOut{Input}{input}
 	\SetKwInOut{Output}{output}
 	\Input{$G = (V, E)$ grafo\\$S$ conjunto de nodos fuente}
@@ -326,7 +326,7 @@ Bajo esta representación podemos paralelizar a nivel de bits y por lo tanto ope
 El Algoritmo \ref{algo:algoritmo16} desperdicia mucho tiempo ejecutando iteraciones del ciclo 10-14, para los nodos $k$ que no se encuentran en el nivel $i - 1$ (aquellos para los que $X[k] = 0$). En esos casos, el arreglo $I$ no contiene más que ceros y no se modifica el contenido del arreglo $Y$. Vamos a sacrificar un poco de capacidad de predicción de saltos introduciendo una guarda que verifique esto.
 
 \begin{algorithm}
-	\dontprintsemicolon
+	\DontPrintSemicolon
 	\SetKwInOut{Input}{input}
 	\SetKwInOut{Output}{output}
 	\Input{$G = (V, E)$ grafo\\$S$ conjunto de nodos fuente}

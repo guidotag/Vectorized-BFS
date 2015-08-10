@@ -128,7 +128,7 @@ Podemos generalizar esta noción permitiendo que un recorrido tenga la capacidad
 Consideremos un algoritmo que mantiene, en todo momento, un conjunto $M$ de nodos ya visitados o \textit{marcados}, y un conjunto $F = \{v \in V - M : \text{existe }w\in M\text{ tal que }w \to v \in E\}$, es decir, el conjunto de nodos adyacentes a nodos en $M$, que están fuera de $M$. Los nodos de $F$ se llaman \textit{nodos fronterizos}. En cada paso, el algoritmo elige un nodo de $F$, lo agrega a los nodos visitados, y actualiza el conjunto de nodos fronterizos. Repite esta operación hasta que no haya nodos fronterizos.
 
 \begin{algorithm}
-	\dontprintsemicolon
+	\DontPrintSemicolon
 	\SetKwInOut{Input}{input}
 	\SetKwInOut{Output}{output}
 	\Input{$G$ grafo\\$S$ conjunto de nodos fuente}
@@ -171,7 +171,7 @@ En el Algoritmo \ref{algo:algoritmo2} presentamos esta versión de DFS con una p
 El conjunto $M$ de nodos marcados se representa igual que $S$.
 
 \begin{algorithm}
-	\dontprintsemicolon
+	\DontPrintSemicolon
 	\SetKwInOut{Input}{input}
 	\SetKwInOut{Output}{output}
 	\Input{$G = (V, E)$ grafo\\$S$ conjunto de nodos fuente}
@@ -216,7 +216,7 @@ Observemos que la representación del grafo mediante listas de adyacencias tiene
 Una implementación alternativa de DFS, quizá más natural, es la recursiva, que simula el comportamiento de la pila mediante recursión. La idea del algoritmo es que si queremos recorrer un grafo en profundidad entonces al visitar un nodo debemos hacer DFS recursivamente sobre sus nodos adyacentes. En el Algoritmo \ref{algo:algoritmo3} podemos ver esta implementación alternativa. La representación de $G$, $S$ y $M$ que utiliza es la misma que antes.
 
 \begin{algorithm}
-	\dontprintsemicolon
+	\DontPrintSemicolon
 	\SetKwInOut{Input}{input}
 	\SetKwInOut{Output}{output}
 	\Input{$G = (V, E)$ grafo\\$S$ conjunto de nodos fuente}
@@ -239,7 +239,7 @@ Una implementación alternativa de DFS, quizá más natural, es la recursiva, qu
 \end{algorithm}
 
 \begin{algorithm}
-	\dontprintsemicolon
+	\DontPrintSemicolon
 	\SetKwInOut{Input}{input}
 	\SetKwInOut{Output}{output}
 	\Input{$G$ grafo\\$M$ conjunto de nodos visitados\\$i$ un nodo de $G$}
@@ -267,7 +267,7 @@ Una implementación tradicional de BFS utiliza, para representar el conjunto $F$
 En el Algoritmo \ref{algo:algoritmo5} presentamos una implementación de BFS. La única diferencia respecto del DFS iterativo es que hemos cambiado la pila para representar $F$ por una cola. Se puede probar, en forma análoga a lo hecho para DFS, que la complejidad de BFS, representando al grafo con listas de adyacencia, es $\mathcal{O}(n + m)$, con $m$ la cantidad de aristas del grafo. Utilizando una matriz de adyacencia, la complejidad es $\mathcal{O}(n^2)$.
 
 \begin{algorithm}
-	\dontprintsemicolon
+	\DontPrintSemicolon
 	\SetKwInOut{Input}{input}
 	\SetKwInOut{Output}{output}
 	\Input{$G = (V, E)$ grafo\\$S$ conjunto de nodos fuente}
